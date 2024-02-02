@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
+</div>
+<section class="section dashboard">
+  <div class="row">
+
+    <div class="col-lg">
+      <div class="row">
+        <div class="col-xxl-4 col-md-6">
+          <div class="card info-card sales-card">
+            <div class="card-body">
+              <h5 class="card-title">Total Income <span>| This Month</span></h5>
+
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bx bx-donate-heart"></i>
+                </div>
+                <div class="ps-3">
+                  <a href="/manage/all">{{total_all_income}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-md-6">
+          <div class="card info-card sales-card">
+            <div class="card-body">
+              <h5 class="card-title">Ambulance (Income)</h5>
+
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bx bx-donate-heart"></i>
+                </div>
+                <div class="ps-3">
+                  <a href="/manage/ambulance">{{total_ambulance_income}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-md-6">
+          <div class="card info-card revenue-card">
+            <div class="card-body">
+              <h5 class="card-title">Dastarkhuan (Income)</h5>
+
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="ps-3">
+                  <a href="/manage/dastarkhuan">{{total_dastarkhuan_income}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-xl-12" style="margin: auto;">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">Blood Bank (Income)</h5>
+
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bx  bx-donate-heart"></i>
+                </div>
+                <div class="ps-3">
+                  <a href="/manage/blood">{{total_blood_income}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-xl-12" style="margin: auto;">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">Others (Income)<span></span></h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bx  bx-donate-heart"></i>
+                </div>
+                <div class="ps-3">
+                  <a href="/manage/others">{{total_others_income}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-xl-12" style="margin: auto;">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">Total Expenses <span>| This Month</span></h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bx  bx-donate-heart"></i>
+                </div>
+                <div class="ps-3">
+                  <a href="/manage/all">{{total_expenses}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div style="max-width: 300px;margin: 10px auto;">
+  <div style="display: flex; justify-content: space-evenly;">
+    <canvas id="income"></canvas>
+    <canvas id="expenses"></canvas>
+  </div>
+</div>
+
+{% endblock %}

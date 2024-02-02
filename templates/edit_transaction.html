@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit an {{ttype}}{% endblock %}
+
+{% block content %}
+
+<div class="pagetitle">
+  <h1>{{category}}</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item">Manage</li>
+      <li class="breadcrumb-item"><a href="/manage/{{category|lower}}">{{category}}</a></li>
+      <li class="breadcrumb-item active">Edit an {{ttype}}</li>
+    </ol>
+  </nav>
+</div>
+
+
+<form method="POST">
+  <input type="hidden" value="{{csrf_token() }}" name="csrf_token">
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Edit an <b>{{ttype}}</b></h5>
+
+      <!-- flash messages -->
+      {% with messages = get_flashed_messages(with_categories=True) %}
+      {% if messages %}
+      {% for Mtype, message in messages %}
+      {% if Mtype == 'success' %}
+      <div class="alert alert-success" role="alert">
+        {{ message }}
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      <form>
+        <div class="row mb-3">
+          <label for="inputText" class="col-sm-2 col-form-label">{{form.details.label.text}}</label>
+          <div class="col-sm-10">
+            {{form.details(class="form-control")}}
+          </div>
+        </div>
+        {% if form.details.errors %}
+        <div class="alert alert-danger mt-2" style="padding: 2px;" role="alert">
+          {% for error in form.details.errors %}
+          {{ error }}
+          {% endfor %}
+        </div>
+        {% endif %}
+
+
+
+        <div class="row mb-3">
+          <label for="inputNumber" class="col-sm-2 col-form-label">{{form.amount.label.text}}</label>
+          <div class="col-sm-10">
+            {{form.amount(class="form-control", type="number")}}
+          </div>
+        </div>
+        {% if form.amount.errors %}
+        <div class="alert alert-danger mt-2" style="padding: 2px;" role="alert">
+          {% for error in form.amount.errors %}
+          {{ error }}
+          {% endfor %}
+        </div>
+        {% endif %}
+
+
+
+        <div class="row mb-3">
+          <label for="inputDate" class="col-sm-2 col-form-label">{{form.date.label.text}}</label>
+          <div class="col-sm-10">
+            {{form.date(class="form-control", type="date", value=date)}}
+          </div>
+        </div>
+        {% if form.date.errors %}
+        <div class="alert alert-danger mt-2" style="padding: 2px;" role="alert">
+          {% for error in form.date.errors %}
+          {{ error }}
+          {% endfor %}
+        </div>
+        {% endif %}
+        <div class="row mb-3">
+          <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-pencil-square"></i> Update</button>
+            <a onclick="verify('/manage/{{transaction.category}}/{{transaction.id}}/delete')" class="btn btn-warning"><i class="bi bi-trash"></i> Delete</a>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</form>
+
+
+{% endblock %}

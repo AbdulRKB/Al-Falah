@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Balance{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>Monthly Balance</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active">Monthly Balance</li>
+    </ol>
+  </nav>
+</div>
+<p class="m-2 text-muted">Monetary unit is <span style="font-weight: 600;">PKR</span>, unless stated otherwise.</p>
+<section class="section">
+    <table class="table text-center">
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Expense</th>
+            <th scope="col">Income</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in transactions %}
+          <tr>
+            <td>{{t.category|title}}</td>
+            {% if t.ttype == "expense" %}
+            <td>{{"{:,}".format(t.amount)}}</td>
+            <td></td>
+            {% else %}
+            <td></td>
+            <td>{{"{:,}".format(t.amount)}}</td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+          <tr>
+            <td><b>Total</b></td>
+            <td><b>{{"{:,}".format(total_expenses)}}</b></td>
+            <td><b>{{"{:,}".format(total_income)}}</b></td>
+          </tr>
+        </tbody>
+      </table>
+</section>
+
+{% endblock %}

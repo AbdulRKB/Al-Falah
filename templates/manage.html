@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{category}}{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>{{category}}</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item">Manage</li>
+      <li class="breadcrumb-item active">{{category}}</li>
+    </ol>
+  </nav>
+</div>
+
+
+<div class="container col-md-6 mb-4">
+  <div class="btn-group" style="width: 100%;" role="group" aria-label="Add Transaction">
+    <a href="{{category|lower}}/add_expense" class="btn btn-success"><i class="bi bi-plus-circle"></i> Expense</a>
+    <a href="{{category|lower}}/add_income" class="btn btn-success active"><i class="bi bi-plus-circle"></i> Income</a>
+  </div>
+</div>
+
+<form class="container col-md-6 mb-4" method="post">
+  <input type="hidden" value="{{csrf_token() }}" name="csrf_token">
+  <label for="from_date">Filter From</label>
+  <input name="from_date" class="form-control" type="date" value="{{last_month}}" max="{{date}}" required />
+
+  <label for="to_date">Filter To</label>
+  <input name="to_date" class="form-control" type="date" value="{{date}}" required />
+
+  <button type="submit" class="btn btn-primary m-2"><i class="bx  bx-filter"></i> Filter</button>
+</form>
+
+<!-- flash messages -->
+{% with messages = get_flashed_messages(with_categories=True) %}
+{% if messages %}
+{% for Mtype, message in messages %}
+{% if Mtype == 'success' %}
+<div class="alert alert-success" role="alert">
+  {{ message }}
+  {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+
+<p class="m-2 text-muted">Monetary unit is <span style="font-weight: 600;">PKR</span>, unless stated otherwise.</p>
+<section class="section">
+  <table class="table text-center">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Details</th>
+        <th scope="col">Expense</th>
+        <th scope="col">Income</th>
+        <th scope="col">Manage</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for transaction in transactions %}
+      <tr>
+        <td>{{transaction.date}}</td>
+        <td>{{transaction.details}} </td>
+        {% if transaction.ttype == "expense" %}
+        <td>{{transaction.amount}}</td>
+        <td></td>
+        {% else %}
+        <td></td>
+        <td>{{"{:,}".format(transaction.amount)}}</td>
+        {% endif %}
+        <td><a href="/manage/{{transaction.category}}/{{transaction.id}}/edit"><i class="ri ri-ball-pen-line"></i></a>
+        </td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td>{{date}}</td>
+        <td><b>Total</b></td>
+        <td><b>{{"{:,}".format(total_expenses)}}</b></td>
+        <td><b>{{"{:,}".format(total_income)}}</b></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}
