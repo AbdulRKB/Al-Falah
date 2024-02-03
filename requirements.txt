@@ -1,5 +1,15 @@
+<<<<<<< HEAD
 Flask
 Flask_SQLAlchemy
 Flask_WTF
 passlib
 WTForms
+=======
+Flask==2.0.1
+Flask_SQLAlchemy==3.0.3
+Flask_WTF==0.15.1
+passlib==1.7.4
+WTForms==2.3.3
+gunicorn
+Werkzeug==2.2.2
+>>>>>>> fe9bbcd0193d81ab42ecd3eb13853bba67b18737
