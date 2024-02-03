@@ -26,11 +26,16 @@
 }
 
 .datatable-selector {
-	padding: 6px;
+	padding: 8px;
+	outline-color: transparent;
+	border: 2px solid #eee;
 }
 
 .datatable-input {
 	padding: 6px 12px;
+	outline-color: transparent;
+	border: 2px solid #eee;
+	border-radius: 4px;
 }
 
 .datatable-info {

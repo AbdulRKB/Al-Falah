@@ -15,7 +15,7 @@
 </div>
 <p class="m-2 text-muted">Monetary unit is <span style="font-weight: 600;">PKR</span>, unless stated otherwise.</p>
 <section class="section">
-    <table class="table text-center">
+    <table class="table text-center" id="table">
         <thead>
           <tr>
             <th scope="col">Category</th>
@@ -44,5 +44,7 @@
         </tbody>
       </table>
 </section>
-
+<script>
+  new window.simpleDatatables.DataTable("#table");
+</script>
 {% endblock %}

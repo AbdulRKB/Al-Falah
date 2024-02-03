@@ -52,12 +52,26 @@
                         {{form.username(class="form-control", placeholder="Enter Your Password", required=True)}}
                         <div class="invalid-feedback">Please enter your username.</div>
                       </div>
+                      {% if form.username.errors %}
+                      <div class="alert alert-danger mt-2" style="padding: 2px;" role="alert">
+                        {% for error in form.username.errors %}
+                        {{ error }}
+                        {% endfor %}
+                      </div>
+                      {% endif %}
                     </div>
 
                     <div class="col-12">
                       <label for="yourPassword" class="form-label">Password</label>
                       {{form.password(class="form-control", placeholder="Enter Your Password", required=True)}}
                       <div class="invalid-feedback">Please enter your password!</div>
+                      {% if form.password.errors %}
+                      <div class="alert alert-danger mt-2" style="padding: 2px;" role="alert">
+                        {% for error in form.password.errors %}
+                        {{ error }}
+                        {% endfor %}
+                      </div>
+                      {% endif %}
                     </div>
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Login</button>

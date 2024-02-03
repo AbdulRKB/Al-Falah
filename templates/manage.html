@@ -15,14 +15,14 @@
   </nav>
 </div>
 
-
+{% if category|lower != "all" %}
 <div class="container col-md-6 mb-4">
   <div class="btn-group" style="width: 100%;" role="group" aria-label="Add Transaction">
     <a href="{{category|lower}}/add_expense" class="btn btn-success"><i class="bi bi-plus-circle"></i> Expense</a>
     <a href="{{category|lower}}/add_income" class="btn btn-success active"><i class="bi bi-plus-circle"></i> Income</a>
   </div>
 </div>
-
+{% endif %}
 <form class="container col-md-6 mb-4" method="post">
   <input type="hidden" value="{{csrf_token() }}" name="csrf_token">
   <label for="from_date">Filter From</label>
@@ -50,7 +50,7 @@
 
 <p class="m-2 text-muted">Monetary unit is <span style="font-weight: 600;">PKR</span>, unless stated otherwise.</p>
 <section class="section">
-  <table class="table text-center">
+  <table class="table text-center" id="table">
     <thead>
       <tr>
         <th scope="col">Date</th>
@@ -66,7 +66,7 @@
         <td>{{transaction.date}}</td>
         <td>{{transaction.details}} </td>
         {% if transaction.ttype == "expense" %}
-        <td>{{transaction.amount}}</td>
+        <td>{{"{:,}".format(transaction.amount)}}</td>
         <td></td>
         {% else %}
         <td></td>

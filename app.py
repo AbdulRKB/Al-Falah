@@ -5,8 +5,11 @@ from datetime import datetime, timedelta
 from functools import wraps
 from flask_wtf.csrf import CSRFProtect
 from passlib.hash import sha256_crypt
+from getpass import getpass
+from uuid import uuid4
 
 app = Flask(__name__)
+# app.secret_key = uuid4().hex
 app.secret_key = 'secret'
 app.config['WTF_CSRF_ENABLED'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///finance.db'
@@ -25,6 +28,15 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
+def create_user():
+    username = input("Enter Username: ")
+    password = getpass("Enter Password: ")
+    password = sha256_crypt.hash(password)
+    new_user = User(username=username, password=password)
+    db.session.add(new_user)
+    db.session.commit()
+    print('User created successfully!')
 
 @app.route('/')
 @login_required
@@ -94,6 +106,8 @@ def manage_post(category):
 @login_required
 def add_new_income(category):
     category=category.lower()
+    if category == 'all':
+        return redirect(url_for('index'))
     if not category in allow_list_services:
         return redirect(url_for('index'))
     transaction_form = TransactionForm()
@@ -105,11 +119,13 @@ def add_new_income(category):
 @login_required
 def add_new_income_post(category):
     category=category.lower()
+    if category == 'all':
+        return redirect(url_for('index'))
     if not category in allow_list_services:
         return redirect(url_for('index'))
     transaction_form = TransactionForm()
     if transaction_form.validate():
-        new_transaction = Transaction(details=transaction_form.details.data, ttype='income', category=category, amount=transaction_form.amount.data, date=transaction_form.date.data)
+        new_transaction = Transaction(details=transaction_form.details.data, vnumber=transaction_form.vnumber.data,ttype='income', category=category, amount=transaction_form.amount.data, date=transaction_form.date.data)
         db.session.add(new_transaction)
         db.session.commit()
         flash('Income added successfully!', 'success')
@@ -124,6 +140,8 @@ def add_new_income_post(category):
 @login_required
 def add_new_expense(category):
     category=category.lower()
+    if category == 'all':
+        return redirect(url_for('index'))
     if not category in allow_list_services:
         return redirect(url_for('index'))
     transaction_form = TransactionForm()
@@ -134,11 +152,13 @@ def add_new_expense(category):
 @login_required
 def add_new_expense_post(category):
     category=category.lower()
+    if category == 'all':
+        return redirect(url_for('index'))
     if not category in allow_list_services:
         return redirect(url_for('index'))
     transaction_form = TransactionForm()
     if transaction_form.validate():
-        new_transaction = Transaction(details=transaction_form.details.data, ttype='expense', category=category, amount=transaction_form.amount.data, date=transaction_form.date.data)
+        new_transaction = Transaction(details=transaction_form.details.data, vnumber=transaction_form.vnumber.data, ttype='expense', category=category, amount=transaction_form.amount.data, date=transaction_form.date.data)
         db.session.add(new_transaction)
         db.session.commit()
         flash('Expense added successfully!', 'success')
@@ -152,6 +172,10 @@ def add_new_expense_post(category):
 @login_required
 def edit_transaction(category, id):
     category=category.lower()
+    if category == 'all':
+        return redirect(url_for('index'))
+    if not category in allow_list_services:
+        return redirect(url_for('index'))
     transaction = Transaction.query.get(id)
     transaction_form = TransactionForm(obj=transaction)
     date = transaction.date.strftime('%Y-%m-%d')
@@ -163,9 +187,14 @@ def edit_transaction(category, id):
 @login_required
 def edit_transaction_post(category, id):
     category=category.lower()
+    if category == 'all':
+        return redirect(url_for('index'))
+    if not category in allow_list_services:
+        return redirect(url_for('index'))
     transaction = Transaction.query.get(id)
     transaction_form = TransactionForm()
     if request.method == "POST" and transaction_form.validate():
+        transaction.vnumber = transaction_form.vnumber.data
         transaction.details = transaction_form.details.data
         transaction.amount = transaction_form.amount.data
         transaction.date = transaction_form.date.data
@@ -238,13 +267,6 @@ def users():
 def users_post():
     if session.get('username') != 'admin':
         return redirect(url_for('index'))
-    if request.form.get('delete'):
-        user_id = request.form.get('delete')
-        user = User.query.get(user_id)
-        db.session.delete(user)
-        db.session.commit()
-        flash('User deleted successfully!', 'success')
-        return redirect(url_for('users'))
     users_form = UserForm()
     if users_form.validate():
         password = users_form.password.data
@@ -254,8 +276,18 @@ def users_post():
         db.session.commit()
         flash('User added successfully!', 'success')
         return redirect(url_for('users'))
-    elif request.method == 'POST':
-        flash(users_form.errors, 'danger')
+    flash(users_form.errors, 'danger')
+    return redirect(url_for('users'))
+
+@app.post('/users/delete')
+def user_delete():
+    if session.get("username") != "admin":
+        return redirect(url_for("index"))
+    user_id = request.form.get('delete')
+    user = User.query.get(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    flash('User deleted successfully!', 'warning')
     return redirect(url_for('users'))
 
 @app.errorhandler(404)

@@ -7,6 +7,7 @@ db = SQLAlchemy()
 
 class Transaction(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid4()))
+    vnumber = db.Column(db.String(100), nullable=False)
     details = db.Column(db.String(100), nullable=False)
     ttype = db.Column(db.String(100), nullable=False) # income/expense
     category = db.Column(db.String(100), nullable=False) # ambulance, dastarkuan, etc
@@ -15,11 +16,9 @@ class Transaction(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.now)
     date_modified = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
+
     def __repr__(self):
         return f"Transaction('{self.details}', '{self.ttype}', '{self.category}', '{self.amount}', '{self.date}')"
-
-
-
 
 class User(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid4()))
