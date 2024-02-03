@@ -820,19 +820,36 @@ h6 {
   flex-grow: 0;
 }
 
-.dashboard .sales-card .card-icon {
+.dashboard .card1 .card-icon {
+  color: #f141c2;
+  background: #fef6fb;
+}
+
+.dashboard .card2 .card-icon {
   color: #4154f1;
   background: #f6f6fe;
 }
 
-.dashboard .revenue-card .card-icon {
+.dashboard .card8 .card-icon {
+  color: #9341f1;
+  background: #f2e0ff;
+}
+
+
+
+.dashboard .card3 .card-icon {
   color: #2eca6a;
   background: #e0f8e9;
 }
 
-.dashboard .customers-card .card-icon {
+.dashboard .card4 .card-icon {
   color: #ff771d;
   background: #ffecdf;
+}
+
+.dashboard .card5 .card-icon {
+  color: #ff1d1d;
+  background: #ffdfdf;
 }
 
 /* Activity */
@@ -1230,4 +1247,9 @@ h6 {
   text-align: center;
   font-size: 13px;
   color: #012970;
+}
+
+::selection{
+  background: #0d24f499;
+  color: #fff;
 }

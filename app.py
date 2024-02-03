@@ -18,8 +18,6 @@ db.init_app(app)
 CSRFProtect(app)
 allow_list_services = ['all','ambulance', 'dastarkhuan', 'blood', 'others']
 
-
-
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -213,7 +211,6 @@ def balance():
     transactions = Transaction.query.filter(Transaction.date >= month_from_today).order_by(Transaction.date.asc()).all()
     total_income = sum([i.amount for i in transactions if i.ttype == 'income'])
     total_expenses = sum([e.amount for e in transactions if e.ttype == 'expense'])
-    # create a trial balance
     return render_template('trial_balance.html', transactions=transactions, total_income=total_income, total_expenses=total_expenses)
 
 @app.get('/manage/<category>/<id>/delete')
