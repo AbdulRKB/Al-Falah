@@ -44,7 +44,7 @@
                 <td>
                     <form method="post" action="/users/delete">
                         <input type="hidden" name="csrf_token" value="{{csrf_token()}}" >
-                        <input type="hidden" name="delete" value="{{user.id}}"><button type="submit"><i
+                        <input type="hidden" name="delete" value="{{user.id}}"><button class="btn btn-danger" type="submit"><i
                                 class="bi bi-trash"></i></button></form>
                 </td>
             </tr>
