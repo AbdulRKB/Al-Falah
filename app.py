@@ -9,8 +9,8 @@ from getpass import getpass
 from uuid import uuid4
 
 app = Flask(__name__)
-# app.secret_key = uuid4().hex
-app.secret_key = 'secret'
+app.secret_key = uuid4().hex
+# app.secret_key = 'secret'
 app.config['WTF_CSRF_ENABLED'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///finance.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
