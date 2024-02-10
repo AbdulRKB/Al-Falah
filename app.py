@@ -27,6 +27,35 @@ def login_required(f):
     return decorated_function
 
 
+def user_required(user_type):
+    def decorator(func):
+        @wraps(func)
+        def decorated_function(*args, **kwargs):
+            if not session.get('logged_in'):
+                return redirect(url_for('login'))
+            if int(session.get('user_type')) != int(user_type):
+                return redirect(url_for('index'))
+            return func(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+
+def user_required_multi(user_type):
+    def decorator(func):
+        @wraps(func)
+        def decorated_function(*args, **kwargs):
+            if not session.get('logged_in'):
+                return redirect(url_for('login'))
+            if not int(session.get('user_type')) in user_type:
+                return redirect(url_for('index'))
+            return func(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+user_category_dict = {1: 'admin', 2: 'user_with_full_access', 3: 'ambulance', 4: 'dastarkhuan', 5: 'blood', 6: 'others'}
+
+
+
 def create_user():
     username = input("Enter Username: ")
     password = getpass("Enter Password: ")
@@ -58,6 +87,10 @@ def index():
 @app.get('/manage/<category>')
 @login_required
 def manage(category):
+    if session.get('user_type') != 1 and session.get('user_type') != 2:
+        user_key = user_category_dict[session.get('user_type')]
+        if category.lower() != user_key:
+            return redirect(url_for('index'))
     category=category.lower()
     if not category in allow_list_services:
         return redirect(url_for('index'))
@@ -79,6 +112,10 @@ def manage(category):
 @app.post('/manage/<category>')
 @login_required
 def manage_post(category):
+    if session.get('user_type') != 1 and session.get('user_type') != 2:
+        user_key = user_category_dict[session.get('user_type')]
+        if category.lower() != user_key:
+            return redirect(url_for('index'))
     category=category.lower()
     if not category in allow_list_services:
         return redirect(url_for('index'))
@@ -103,6 +140,10 @@ def manage_post(category):
 @app.get('/manage/<category>/add_income')
 @login_required
 def add_new_income(category):
+    if session.get('user_type') != 1 and session.get('user_type') != 2:
+        user_key = user_category_dict[session.get('user_type')]
+        if category.lower() != user_key:
+            return redirect(url_for('index'))
     category=category.lower()
     if category == 'all':
         return redirect(url_for('index'))
@@ -116,6 +157,10 @@ def add_new_income(category):
 @app.post('/manage/<category>/add_income')
 @login_required
 def add_new_income_post(category):
+    if session.get('user_type') != 1 and session.get('user_type') != 2:
+        user_key = user_category_dict[session.get('user_type')]
+        if category.lower() != user_key:
+            return redirect(url_for('index'))
     category=category.lower()
     if category == 'all':
         return redirect(url_for('index'))
@@ -137,6 +182,10 @@ def add_new_income_post(category):
 @app.get('/manage/<category>/add_expense')
 @login_required
 def add_new_expense(category):
+    if session.get('user_type') != 1 and session.get('user_type') != 2:
+        user_key = user_category_dict[session.get('user_type')]
+        if category.lower() != user_key:
+            return redirect(url_for('index'))
     category=category.lower()
     if category == 'all':
         return redirect(url_for('index'))
@@ -149,6 +198,10 @@ def add_new_expense(category):
 @app.post('/manage/<category>/add_expense')
 @login_required
 def add_new_expense_post(category):
+    if session.get('user_type') != 1 and session.get('user_type') != 2:
+        user_key = user_category_dict[session.get('user_type')]
+        if category.lower() != user_key:
+            return redirect(url_for('index'))
     category=category.lower()
     if category == 'all':
         return redirect(url_for('index'))
@@ -169,6 +222,10 @@ def add_new_expense_post(category):
 @app.get('/manage/<category>/<id>/edit')
 @login_required
 def edit_transaction(category, id):
+    if session.get('user_type') != 1 and session.get('user_type') != 2:
+        user_key = user_category_dict[session.get('user_type')]
+        if category.lower() != user_key:
+            return redirect(url_for('index'))
     category=category.lower()
     if category == 'all':
         return redirect(url_for('index'))
@@ -184,6 +241,10 @@ def edit_transaction(category, id):
 @app.post('/manage/<category>/<id>/edit')
 @login_required
 def edit_transaction_post(category, id):
+    if session.get('user_type') != 1 and session.get('user_type') != 2:
+        user_key = user_category_dict[session.get('user_type')]
+        if category.lower() != user_key:
+            return redirect(url_for('index'))
     category=category.lower()
     if category == 'all':
         return redirect(url_for('index'))
@@ -206,6 +267,7 @@ def edit_transaction_post(category, id):
 
 @app.get('/balance')
 @login_required
+@user_required_multi([1,2])
 def balance():
     month_from_today = datetime.now().date() - timedelta(days=31)
     transactions = Transaction.query.filter(Transaction.date >= month_from_today).order_by(Transaction.date.asc()).all()
@@ -237,6 +299,7 @@ def login():
             if sha256_crypt.verify(password, user.password):
                 session['logged_in'] = True
                 session['username'] = user.username
+                session['user_type'] = int(user.utype)
                 return redirect(url_for('index'))
     return render_template('login.html', form=login_form)
 
@@ -251,6 +314,7 @@ def logout():
 
 @app.get('/users')
 @login_required
+@user_required(user_type=1)
 def users():
     if session.get('username') != 'admin':
         return redirect(url_for('index'))
@@ -261,6 +325,7 @@ def users():
 
 @app.post('/users')
 @login_required
+@user_required(user_type=1)
 def users_post():
     if session.get('username') != 'admin':
         return redirect(url_for('index'))
@@ -268,7 +333,7 @@ def users_post():
     if users_form.validate():
         password = users_form.password.data
         password = sha256_crypt.hash(password)
-        new_user = User(username=users_form.username.data, password=password)
+        new_user = User(username=users_form.username.data, password=password, utype=users_form.utype.data)
         db.session.add(new_user)
         db.session.commit()
         flash('User added successfully!', 'success')
@@ -277,6 +342,8 @@ def users_post():
     return redirect(url_for('users'))
 
 @app.post('/users/delete')
+@login_required
+@user_required(user_type=1)
 def user_delete():
     if session.get("username") != "admin":
         return redirect(url_for("index"))

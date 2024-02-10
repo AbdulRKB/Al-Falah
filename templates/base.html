@@ -79,7 +79,7 @@
           <i class="bi bi-grid"></i><span>Home</span>
         </a>
       </li>
-      {% if session.get('username') == 'admin' %}
+      {% if session.get('user_type') == 1 %}
       <li class="nav-item">
         <a class="nav-link collapsed" href="/users">
           <i class="bi bi-person-gear"></i><span>Manage Users</span>
@@ -91,31 +91,41 @@
           <i class="bi bi-menu-button-wide"></i><span>Manage Books</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="data" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          {% if session.get('user_type') == 1 or session.get('user_type') == 2 or session.get('user_type') == 3 %}
           <li>
             <a href="/manage/ambulance">
               <i class="bi bi-app"></i><span>Ambulance</span>
             </a>
           </li>
+          {% endif %}
+          {% if session.get('user_type') == 1 or session.get('user_type') == 2 or session.get('user_type') == 4 %}
           <li>
             <a href="/manage/dastarkhuan">
               <i class="bi bi-app"></i><span>Dastarkhuan</span>
             </a>
           </li>
+          {% endif %}
+          {% if session.get('user_type') == 1 or session.get('user_type') == 2 or session.get('user_type') == 5 %}
           <li>
             <a href="/manage/blood">
               <i class="bi bi-app"></i><span>Blood</span>
             </a>
           </li>
+          {% endif %}
+          {% if session.get('user_type') == 1 or session.get('user_type') == 2 or session.get('user_type') == 6 %}
           <li>
             <a href="/manage/others">
               <i class="bi bi-app"></i><span>Others</span>
             </a>
           </li>
+          {% endif %}
+          {% if session.get('user_type') == 1 or session.get('user_type') == 2 %}
           <li>
             <a href="/balance">
               <i class="bi bi-app"></i><span>Balance</span>
             </a>
           </li>
+          {% endif %}
         </ul>
       </li>
     </ul>

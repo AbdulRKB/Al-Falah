@@ -33,6 +33,7 @@
         <thead>
             <tr>
                 <th scope="col">Username</th>
+                <th scope="col">User Type</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -40,7 +41,8 @@
             {% for user in users %}
 
             <tr>
-                <td>{{user.username}}</td>
+              <td>{{user.username}}</td>
+              <td>{{user.utype}}</td>
                 <td>
                     <form method="post" action="/users/delete">
                         <input type="hidden" name="csrf_token" value="{{csrf_token()}}" >
@@ -84,6 +86,19 @@
           {% if form.password.errors %}
           <div class="alert alert-danger mt-2" style="padding: 2px;" role="alert">
             {% for error in form.password.errors %}
+            {{ error }}
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="row mb-3">
+            <label for="inputNumber" class="col-sm-2 col-form-label">{{form.utype.label.text}}</label>
+            <div class="col-sm-10">
+              {{form.utype(class="form-control")}}
+            </div>
+          </div>
+          {% if form.utype.errors %}
+          <div class="alert alert-danger mt-2" style="padding: 2px;" role="alert">
+            {% for error in form.utype.errors %}
             {{ error }}
             {% endfor %}
           </div>

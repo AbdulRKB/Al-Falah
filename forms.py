@@ -14,3 +14,4 @@ class LoginForm(Form):
 class UserForm(Form):
     username = StringField('Username*', [validators.Length(min=3, max=50), validators.DataRequired()], render_kw={"placeholder": "Enter Username"})
     password = PasswordField('Password*', [validators.Length(min=8), validators.DataRequired()], render_kw={"placeholder": "Enter Password"})
+    utype = SelectField('User Type*', choices=[('2', 'User with full access'), ('3', 'Ambulance'), ('4', 'Dastarkuan'), ('5', 'Blood'), ('6', 'Others')], coerce=int)
